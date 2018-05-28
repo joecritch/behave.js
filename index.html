@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Behave.js</title>
+  </head>
+  <body>
+
+    <div data-behavior="JoinForm">
+      <input type="text" data-JoinForm-textinput="TextInput">
+      <input type="text" data-JoinForm-textinput="TextInput" data-TextInput-validateconfig='{"type": "match"}'>
+      <button data-JoinForm-submitbtn="SubmitBtn">
+        Go
+      </button>
+    </div>
+
+    <script src="https://unpkg.com/immer/dist/immer.umd.js"></script>
+    <script>window.produce = immer.default;</script>
+    <script src="behave.js"></script>
+    <script src="behaviors/JoinForm.js"></script>
+    <script src="behaviors/SubmitBtn.js"></script>
+    <script src="behaviors/TextInput.js"></script>
+    <script src="main.js"></script>
+
+  </body>
+</html>
