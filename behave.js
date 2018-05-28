@@ -1,6 +1,6 @@
 const behave = (name, obj) => {
   return function(node, initialProps) {
-    const { render, getInitialState, ...custom } = obj;
+    const { onUpdate, render, getInitialState, ...custom } = obj;
 
     this.name = name;
     this.node = node;
@@ -43,40 +43,33 @@ const behave = (name, obj) => {
       this.__update();
     };
 
-    this.__createChildInstance = (key, props) => {
-      const attrKey = `data-${this.name}-${key}`;
-      const el = this.node.querySelector(`[${attrKey}]`);
-      const behaviorName = el.getAttribute(attrKey);
-      if (behaviorName) {
-        const instance = new window[behaviorName](el, props);
-        this.childCache[key] = {
-          node: el,
-          behavior: instance,
-        };
-      }
+    this.resolveProps = (props, args = []) => {
+      // Resolve the prop functions
+      const resolvedProps = {};
+      Object.keys(props).forEach(propName => {
+        resolvedProps[propName] = props[propName].call(null, this, ...args);
+      });
+      return resolvedProps;
     };
 
     // Called by parent behaviors
-    this.setProps = props => {
+    this.setProps = (props, args = []) => {
       // Merge the DOM attribute props with explicit props
       this.props = Object.assign({}, this.attrProps, props);
       this.__update();
     };
 
     this.__update = () => {
-      // console.trace();
-      const renderDesc = render.apply(this);
-      // const prevRenderDesc = this.prevRenderDesc;
-
       const updateClassList = (node, classList, cache) => {
         Object.keys(classList).forEach(key => {
-          const shouldHaveClass = classList[key];
+          const shouldHaveClass = classList[key].call(null, this);
           if (shouldHaveClass !== cache[key]) {
             if (shouldHaveClass) {
               node.classList.add(key);
             } else {
               node.classList.remove(key);
             }
+            cache[key] = shouldHaveClass;
           }
         });
       };
@@ -89,17 +82,18 @@ const behave = (name, obj) => {
         }
 
         Object.keys(rest).forEach(key => {
-          const attr = rest[key];
+          const attr = rest[key].call(null, this);
           if (attr !== cache[key]) {
             // TODO -- some attributes might have a different api
             node[key] = attr;
+            cache[key] = attr;
           }
         });
       };
 
       const updateListeners = (node, listeners, cache) => {
         Object.keys(listeners).forEach(key => {
-          const listener = listeners[key];
+          const listener = listeners[key].call(null, this);
           if (listener !== cache[key]) {
             if (cache[key]) {
               node.removeEventListener(key, cache[key]);
@@ -107,11 +101,18 @@ const behave = (name, obj) => {
             if (listener) {
               node.addEventListener(key, listener);
             }
+            cache[key] = listener;
           }
         });
       };
 
-      const { children = {}, child = {}, attributes = {}, listeners = {}, ...props } = renderDesc;
+      const {
+        children = {},
+        child = {},
+        attributes = {},
+        listeners = {},
+        ...props
+      } = render;
       updateAttributes(node, attributes, this.__cache.attributes);
       updateListeners(node, listeners, this.__cache.listeners);
 
@@ -129,7 +130,10 @@ const behave = (name, obj) => {
           let instance;
           if (behaviorName) {
             // Currently supports only one linked behavior per child
-            instance = new window[behaviorName](el, childProps);
+            instance = new window[behaviorName](
+              el,
+              this.resolveProps(childProps)
+            );
           }
           this.__cache.child[childName] = {
             node: el,
@@ -137,7 +141,7 @@ const behave = (name, obj) => {
           };
         } else {
           if (this.__cache.child[childName].behavior) {
-            this.__cache.child[childName].behavior.setProps(childProps);
+            this.__cache.child[childName].behavior.setProps(this.resolveProps(childProps));
           }
         }
 
@@ -169,7 +173,7 @@ const behave = (name, obj) => {
         // TODO -- we may need a mechanism to update children
         if (!this.__cache.children[childrenName]) {
           this.__cache.children[childrenName] = {
-            __nodeList: this.node.querySelectorAll(`[${attrKey}]`)
+            __nodeList: this.node.querySelectorAll(`[${attrKey}]`),
           };
         }
 
@@ -177,15 +181,27 @@ const behave = (name, obj) => {
 
         for (let i = 0; i < nodeList.length; i++) {
           const child = nodeList[i];
-          const resolvedProps = typeof children[childrenName] === 'function' ? children[childrenName](child) : children[childrenName];
-          const { attributes: childAttributes, listeners: childListeners, ...childProps} = resolvedProps;
+          const resolvedProps =
+            typeof children[childrenName] === 'function'
+              ? children[childrenName](child)
+              : children[childrenName];
+          const {
+            attributes: childAttributes,
+            listeners: childListeners,
+            ...childProps
+          } = resolvedProps;
+
+          console.log("child", child);
 
           if (!this.__cache.children[childrenName][i]) {
             const behaviorName = child.getAttribute(attrKey);
             let instance;
             if (behaviorName) {
               // Currently supports only one linked behavior per child
-              instance = new window[behaviorName](child, childProps);
+              instance = new window[behaviorName](
+                child,
+                this.resolveProps(childProps, [child])
+              );
             }
             this.__cache.children[childrenName][i] = {
               node: child,
@@ -193,7 +209,9 @@ const behave = (name, obj) => {
             };
           } else {
             if (this.__cache.children[childrenName][i].behavior) {
-              this.__cache.children[childrenName][i].behavior.setProps(childProps);
+              this.__cache.children[childrenName][i].behavior.setProps(
+                this.resolveProps(childProps, [child])
+              );
             }
           }
 
@@ -218,6 +236,10 @@ const behave = (name, obj) => {
           }
         }
       });
+
+      if (onUpdate) {
+        onUpdate.call(this);
+      }
     };
 
     const customKeys = Object.keys(custom);
@@ -229,7 +251,7 @@ const behave = (name, obj) => {
     this.attrProps = this.__getAttrProps();
     this.props = Object.assign({}, this.attrProps, initialProps);
     this.state =
-      typeof getInitialState === 'function' ? getInitialState.apply(this) : {};
+      typeof getInitialState === 'function' ? getInitialState.call(this) : {};
 
     this.__update();
   };

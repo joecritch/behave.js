@@ -1,16 +1,14 @@
 const SubmitBtn = behave('SubmitBtn', {
-  render() {
-    return {
-      attributes: {
-        disabled: this.props.isDisabled,
-        classList: {
-          'is-disabled': this.props.isDisabled,
-        },
+  render: {
+    attributes: {
+      disabled: _ => _.props.isDisabled,
+      classList: {
+        'is-disabled': _ => _.props.isDisabled,
       },
-      listeners: {
-        click: this.props.onClick,
-      },
-    };
+    },
+    listeners: {
+      click: _ => _.props.onClick,
+    },
   },
 });
 

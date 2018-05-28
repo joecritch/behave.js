@@ -19,17 +19,15 @@ const TextInput = behave('TextInput', {
       return;
     }
   },
-  render() {
-    return {
-      attributes: {
-        classList: {
-          'is-error': !this.props.isValid,
-        },
+  render: {
+    attributes: {
+      classList: {
+        'is-error': _ => !_.props.isValid,
       },
-      listeners: {
-        blur: this.handleBlur,
-      },
-    };
+    },
+    listeners: {
+      blur: _ => _.handleBlur,
+    },
   },
 });
 

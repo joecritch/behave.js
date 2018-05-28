@@ -1,49 +1,46 @@
 const JoinForm = behave('JoinForm', {
-  // child: ['submitbtn'],
-  // children: ['textinput'],
   getInitialState() {
     return {
-      invalidFields: [], // TODO - serialize as nodes:: this.options.invalidfields ||
+      invalidFields: [], // TODO - serialize as nodes? this.options.invalidfields ||
       errorMode: false,
     };
   },
+  onUpdate() {
+    // console.log('this', this.props, this.state);
+  },
   handleTextinputValid(node) {
-    this.setState(produce(draft => {
-      draft.invalidFields.splice(draft.invalidFields.indexOf(node), 1);
-    }));
+    this.setState(
+      produce(draft => {
+        draft.invalidFields.splice(draft.invalidFields.indexOf(node), 1);
+      })
+    );
   },
   handleTextinputInvalid(node) {
-    this.setState(produce(draft => {
-      draft.invalidFields.push(node);
-    }));
+    this.setState(
+      produce(draft => {
+        draft.invalidFields.push(node);
+      })
+    );
   },
   handleSubmitBtnClick() {
     this.setState({
       errorMode: true,
     });
   },
-  render() {
-    // console.log("this.state.invalidFields.length > 0", this.state.invalidFields.length > 0);
-    // console.log("this.state", this.state);
-
-    return {
-      child: {
-        submitbtn: {
-          isDisabled: this.state.invalidFields.length > 0,
-          listeners: {
-            click: this.handleSubmitBtnClick
-          },
-          // onClick: ,
-        },
+  render: {
+    child: {
+      submitbtn: {
+        isDisabled: _ => _.state.invalidFields.length > 0,
+        onClick: _ => _.handleSubmitBtnClick,
       },
-      children: {
-        textinput: (child) => ({
-          onValid: this.handleTextinputValid,
-          onInvalid: this.handleTextinputInvalid,
-          isValid: this.state.invalidFields.indexOf(child) === -1,
-        }),
+    },
+    children: {
+      textinput: {
+        onValid: _ => _.handleTextinputValid,
+        onInvalid: _ => _.handleTextinputInvalid,
+        isValid: (_, child) => _.state.invalidFields.indexOf(child) === -1,
       },
-    };
+    },
   },
 });
 
