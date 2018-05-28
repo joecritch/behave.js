@@ -30,7 +30,10 @@ const JoinForm = behave('JoinForm', {
       child: {
         submitbtn: {
           isDisabled: this.state.invalidFields.length > 0,
-          onClick: this.handleSubmitBtnClick,
+          listeners: {
+            click: this.handleSubmitBtnClick
+          },
+          // onClick: ,
         },
       },
       children: {
