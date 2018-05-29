@@ -8,6 +8,20 @@
       opacity: 0.2;
       pointer-events: none;
     }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+    }
+
+    .overlay.is-open {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
     </style>
   </head>
   <body>
@@ -22,7 +36,7 @@
     </div>
     -->
 
-    <div data-behavior="FilterContainer">
+    <div data-behavior="FilterContainer" data-FilterContainer-locked="true">
       <div data-FilterContainer-filtercontrol="FilterControl" data-FilterControl-id="location">
         <div data-FilterControl-field="RadioGroup">
           <label>All <input data-RadioGroup-input type="radio" name="location" value=""></label>
@@ -35,6 +49,9 @@
         <a href="#" data-FilterSearch-clear class="is-disabled">Clear</a>
       </div>
       <a href="#" data-FilterContainer-resetlink class="is-disabled">Reset</a>
+      <div data-FilterContainer-authgate="Overlay" class="overlay">
+        <p>You cannot access that yet.</p>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
@@ -51,6 +68,7 @@
     <script src="behaviors/FilterControl.js"></script>
     <script src="behaviors/RadioGroup.js"></script>
     <script src="behaviors/FilterSearch.js"></script>
+    <script src="behaviors/Overlay.js"></script>
     <script src="main.js"></script>
 
   </body>

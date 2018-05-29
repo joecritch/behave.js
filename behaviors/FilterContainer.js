@@ -3,17 +3,41 @@ const FilterContainer = behave('FilterContainer', {
     return {
       activeFilters: {},
       activeSearch: '',
+      authgateIsOpen: false,
     };
   },
   onUpdate() {
     console.log("this.state", this.state);
   },
+  handleOverlayRequestClose() {
+    this.setState({
+      authgateIsOpen: false,
+      activeSearch: '',
+      activeFilters: {},
+    })
+  },
   handleSearchChange(value) {
+    if (this.props.locked) {
+      return this.setState({
+        authgateIsOpen: true,
+        activeSearch: '',
+        activeFilters: {},
+      });
+    }
+
     this.setState({
       activeSearch: value,
     });
   },
   changeById(id, data) {
+    if (this.props.locked) {
+      return this.setState({
+        authgateIsOpen: true,
+        activeSearch: '',
+        activeFilters: {},
+      });
+    }
+
     this.setState(produce(draft => {
       if (data == null) {
         delete draft.activeFilters[id];
@@ -34,6 +58,10 @@ const FilterContainer = behave('FilterContainer', {
   },
   render: {
     child: {
+      authgate: {
+        isOpen: _ => _.state.authgateIsOpen,
+        onRequestClose: _ => _.handleOverlayRequestClose,
+      },
       resetlink: {
         attributes: {
           classList: {
@@ -55,6 +83,9 @@ const FilterContainer = behave('FilterContainer', {
         activeFilters: _ => _.state.activeFilters,
       },
     },
+  },
+  propTypes: {
+    locked: 'boolean',
   },
 });
 

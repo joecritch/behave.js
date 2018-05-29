@@ -24,6 +24,9 @@ const behave = (name, obj) => {
             attrProps[propKey] = JSON.parse(propValue);
             break;
           }
+          case 'boolean': {
+            attrProps[propKey] = propValue != null;
+          }
           default: {
             attrProps[propKey] = propValue;
             break;
@@ -52,7 +55,9 @@ const behave = (name, obj) => {
       stateKeys.forEach(stateKey => {
         this.state[stateKey] = newState[stateKey];
       });
-      this.__update();
+      setTimeout(() => {
+        this.__update();
+      }, 0);
     };
 
     this.resolveProps = (props, args = []) => {
