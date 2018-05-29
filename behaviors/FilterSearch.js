@@ -1,9 +1,6 @@
 window.FilterSearch = behave('FilterSearch', {
-  init() {
-    this.handleKeyUp = debounce(this.handleKeyUp, 500);
-  },
   handleKeyUp(evt) {
-    this.props.onChange(this.getChild('input').node.value);
+    this.props.onChange(this.getChild('input').value);
   },
   handleClearClick() {
     this.props.onChange('');

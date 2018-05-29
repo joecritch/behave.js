@@ -56,6 +56,26 @@ const FilterContainer = behave('FilterContainer', {
   isFiltered() {
     return Object.keys(this.state.activeFilters).length || this.state.activeSearch;
   },
+  serializeFilters() {
+    const filters = this.state.activeFilters;
+    let serializedFilters = {};
+    const ids = Object.keys(filters);
+    for (let i = 0; i < ids.length; i++) {
+      const id = ids[i];
+      const filter = filters[id];
+      if (Array.isArray(filter) && filter.length > 0) {
+        serializedFilters[id] = filter.join('|');
+      } else if (filter) {
+        serializedFilters[id] = filter;
+      }
+    }
+
+    if (this.state.activeSearch) {
+      serializedFilters.search = this.state.activeSearch;
+    }
+
+    return serializedFilters;
+  },
   render: {
     child: {
       authgate: {
@@ -81,6 +101,9 @@ const FilterContainer = behave('FilterContainer', {
       filtercontrol: {
         onChange: _ => _.changeById,
         activeFilters: _ => _.state.activeFilters,
+      },
+      results: {
+        query: _ => _.serializeFilters(),
       },
     },
   },

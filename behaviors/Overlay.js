@@ -4,8 +4,11 @@ window.Overlay = behave('Overlay', {
   },
   render: {
     attributes: {
-      classList: {
-        'is-open': _ => _.props.isOpen,
+      // classList: {
+        // 'is-open': _ => _.props.isOpen,
+      // },
+      style: {
+        display: _ => _.props.isOpen ? null : 'none',
       },
     },
     listeners: {

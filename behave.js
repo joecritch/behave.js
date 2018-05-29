@@ -11,8 +11,8 @@ const behave = (name, obj) => {
       const attrProps = {};
       const propKeys = Object.keys(propTypes);
 
-      console.log("this", this);
-      console.log('propTypes', propTypes)
+      // console.log("this", this);
+      // console.log('propTypes', propTypes)
 
       propKeys.forEach(propKey => {
         const propType = propTypes[propKey];
@@ -26,6 +26,7 @@ const behave = (name, obj) => {
           }
           case 'boolean': {
             attrProps[propKey] = propValue != null;
+            break;
           }
           default: {
             attrProps[propKey] = propValue;
@@ -37,7 +38,7 @@ const behave = (name, obj) => {
     };
 
     this.getChild = (key) => {
-      return this.__cache.child[key];
+      return this.__cache.child[key].node;
     };
 
     this.getChildren = (key) => {
@@ -51,12 +52,15 @@ const behave = (name, obj) => {
       } else {
         newState = updater;
       }
+      const prevState = Object.assign({}, this.state);
       const stateKeys = Object.keys(newState);
       stateKeys.forEach(stateKey => {
         this.state[stateKey] = newState[stateKey];
       });
+      // setTimeout is used to affect the DOM reliably
+      // e.g. currentTarget.checked
       setTimeout(() => {
-        this.__update();
+        this.__update(this.props, prevState);
       }, 0);
     };
 
@@ -72,11 +76,12 @@ const behave = (name, obj) => {
     // Called by parent behaviors
     this.setProps = (props, args = []) => {
       // Merge the DOM attribute props with explicit props
+      const prevProps = this.props;
       this.props = Object.assign({}, this.attrProps, props);
-      this.__update();
+      this.__update(prevProps, this.state);
     };
 
-    this.__update = () => {
+    this.__update = (prevProps = {}, prevState = {}) => {
       const updateClassList = (node, classList, cache) => {
         Object.keys(classList).forEach(key => {
           const shouldHaveClass = classList[key].call(null, this);
@@ -91,11 +96,30 @@ const behave = (name, obj) => {
         });
       };
 
+      const updateStyle = (node, styleObj, cache) => {
+        Object.keys(styleObj).forEach(key => {
+          let val = styleObj[key].call(null, this);
+
+          // Uses `''` for null style values to properly remove
+          val = val == null ? '' : val;
+          if (val !== cache[key]) {
+            node.style[key] = val;
+            cache[key] = val;
+          }
+        });
+      };
+
       const updateAttributes = (node, attrs, cache, args = []) => {
-        const { classList, ...rest } = attrs;
+        const { classList, style, ...rest } = attrs;
+
         if (classList) {
           cache.classList = cache.classList || {};
           updateClassList(node, classList, cache.classList);
+        }
+
+        if (style) {
+          cache.style = cache.style || {};
+          updateStyle(node, style, cache.style);
         }
 
         Object.keys(rest).forEach(key => {
@@ -179,7 +203,6 @@ const behave = (name, obj) => {
         if (childListeners) {
           this.__cache.child[childName].listeners =
             this.__cache.child[childName].listeners || {};
-          console.log("childListeners", childListeners);
           updateListeners(
             this.__cache.child[childName].node,
             childListeners,
@@ -261,7 +284,7 @@ const behave = (name, obj) => {
       });
 
       if (onUpdate) {
-        onUpdate.call(this);
+        onUpdate.call(this, prevProps, prevState);
       }
     };
 
