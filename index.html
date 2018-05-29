@@ -3,9 +3,16 @@
   <head>
     <meta charset="utf-8">
     <title>Behave.js</title>
+    <style>
+    .is-disabled {
+      opacity: 0.2;
+      pointer-events: none;
+    }
+    </style>
   </head>
   <body>
 
+    <!--
     <div data-behavior="JoinForm">
       <input type="text" data-JoinForm-textinput="TextInput">
       <input type="text" data-JoinForm-textinput="TextInput" data-TextInput-validateconfig='{"type": "match"}'>
@@ -13,13 +20,37 @@
         Go
       </button>
     </div>
+    -->
 
+    <div data-behavior="FilterContainer">
+      <div data-FilterContainer-filtercontrol="FilterControl" data-FilterControl-id="location">
+        <div data-FilterControl-field="RadioGroup">
+          <label>All <input data-RadioGroup-input type="radio" name="location" value=""></label>
+          <label>Brooklyn <input data-RadioGroup-input type="radio" name="location" value="Brooklyn"></label>
+          <label>Manhattan <input data-RadioGroup-input type="radio" name="location" value="Manhattan"></label>
+        </div>
+      </div>
+      <div data-FilterContainer-search="FilterSearch">
+        <input type="text" data-FilterSearch-input>
+        <a href="#" data-FilterSearch-clear class="is-disabled">Clear</a>
+      </div>
+      <a href="#" data-FilterContainer-resetlink class="is-disabled">Reset</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
     <script src="https://unpkg.com/immer/dist/immer.umd.js"></script>
-    <script>window.produce = immer.default;</script>
+    <script>
+    window.produce = immer.default;
+    window.debounce = _.debounce;
+    </script>
     <script src="behave.js"></script>
-    <script src="behaviors/JoinForm.js"></script>
+    <!-- <script src="behaviors/JoinForm.js"></script>
     <script src="behaviors/SubmitBtn.js"></script>
-    <script src="behaviors/TextInput.js"></script>
+    <script src="behaviors/TextInput.js"></script> -->
+    <script src="behaviors/FilterContainer.js"></script>
+    <script src="behaviors/FilterControl.js"></script>
+    <script src="behaviors/RadioGroup.js"></script>
+    <script src="behaviors/FilterSearch.js"></script>
     <script src="main.js"></script>
 
   </body>

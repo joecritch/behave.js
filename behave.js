@@ -1,18 +1,21 @@
 const behave = (name, obj) => {
   return function(node, initialProps) {
-    const { onUpdate, render, getInitialState, ...custom } = obj;
+    const { init, onUpdate, propTypes = {}, render, getInitialState, ...custom } = obj;
 
     this.name = name;
     this.node = node;
-    this.propTypes = this.propTypes || {};
     this.__cache = { attributes: {}, listeners: {}, children: {}, child: {} };
 
     this.__getAttrProps = () => {
       // Get DOM attribute props, using prop types
       const attrProps = {};
-      const propKeys = Object.keys(this.propTypes);
+      const propKeys = Object.keys(propTypes);
+
+      console.log("this", this);
+      console.log('propTypes', propTypes)
+
       propKeys.forEach(propKey => {
-        const propType = this.propTypes[propKey];
+        const propType = propTypes[propKey];
         const propValue = this.node.getAttribute(
           `data-${this.name}-${propKey}`
         );
@@ -22,11 +25,20 @@ const behave = (name, obj) => {
             break;
           }
           default: {
+            attrProps[propKey] = propValue;
             break;
           }
         }
       });
       return attrProps;
+    };
+
+    this.getChild = (key) => {
+      return this.__cache.child[key];
+    };
+
+    this.getChildren = (key) => {
+      return this.__cache.children[key];
     };
 
     this.setState = updater => {
@@ -74,7 +86,7 @@ const behave = (name, obj) => {
         });
       };
 
-      const updateAttributes = (node, attrs, cache) => {
+      const updateAttributes = (node, attrs, cache, args = []) => {
         const { classList, ...rest } = attrs;
         if (classList) {
           cache.classList = cache.classList || {};
@@ -82,7 +94,7 @@ const behave = (name, obj) => {
         }
 
         Object.keys(rest).forEach(key => {
-          const attr = rest[key].call(null, this);
+          const attr = rest[key].call(null, this, ...args);
           if (attr !== cache[key]) {
             // TODO -- some attributes might have a different api
             node[key] = attr;
@@ -91,9 +103,9 @@ const behave = (name, obj) => {
         });
       };
 
-      const updateListeners = (node, listeners, cache) => {
+      const updateListeners = (node, listeners, cache, args = []) => {
         Object.keys(listeners).forEach(key => {
-          const listener = listeners[key].call(null, this);
+          const listener = listeners[key].call(null, this, ...args);
           if (listener !== cache[key]) {
             if (cache[key]) {
               node.removeEventListener(key, cache[key]);
@@ -122,17 +134,19 @@ const behave = (name, obj) => {
           listeners: childListeners,
           ...childProps
         } = child[childName];
+        let el;
+
         // Set up the child
         if (!this.__cache.child[childName]) {
           const attrKey = `data-${this.name}-${childName}`;
-          const el = this.node.querySelector(`[${attrKey}]`);
+          el = this.node.querySelector(`[${attrKey}]`);
           const behaviorName = el.getAttribute(attrKey);
           let instance;
           if (behaviorName) {
             // Currently supports only one linked behavior per child
             instance = new window[behaviorName](
               el,
-              this.resolveProps(childProps)
+              this.resolveProps(childProps, [el])
             );
           }
           this.__cache.child[childName] = {
@@ -140,6 +154,7 @@ const behave = (name, obj) => {
             behavior: instance,
           };
         } else {
+          el = this.__cache.child[childName].node;
           if (this.__cache.child[childName].behavior) {
             this.__cache.child[childName].behavior.setProps(this.resolveProps(childProps));
           }
@@ -151,17 +166,20 @@ const behave = (name, obj) => {
           updateAttributes(
             this.__cache.child[childName].node,
             childAttributes,
-            this.__cache.child[childName].attributes
+            this.__cache.child[childName].attributes,
+            [el]
           );
         }
 
         if (childListeners) {
           this.__cache.child[childName].listeners =
             this.__cache.child[childName].listeners || {};
+          console.log("childListeners", childListeners);
           updateListeners(
             this.__cache.child[childName].node,
             childListeners,
-            this.__cache.child[childName].listeners
+            this.__cache.child[childName].listeners,
+            [el]
           );
         }
       });
@@ -191,8 +209,6 @@ const behave = (name, obj) => {
             ...childProps
           } = resolvedProps;
 
-          console.log("child", child);
-
           if (!this.__cache.children[childrenName][i]) {
             const behaviorName = child.getAttribute(attrKey);
             let instance;
@@ -221,7 +237,8 @@ const behave = (name, obj) => {
             updateAttributes(
               this.__cache.children[childrenName][i].node,
               childAttributes,
-              this.__cache.children[childrenName][i].attributes
+              this.__cache.children[childrenName][i].attributes,
+              [child]
             );
           }
 
@@ -231,7 +248,8 @@ const behave = (name, obj) => {
             updateListeners(
               this.__cache.children[childrenName][i].node,
               childListeners,
-              this.__cache.children[childrenName][i].listeners
+              this.__cache.children[childrenName][i].listeners,
+              [child]
             );
           }
         }
@@ -252,6 +270,10 @@ const behave = (name, obj) => {
     this.props = Object.assign({}, this.attrProps, initialProps);
     this.state =
       typeof getInitialState === 'function' ? getInitialState.call(this) : {};
+
+    if (init) {
+      init.call(this);
+    }
 
     this.__update();
   };
