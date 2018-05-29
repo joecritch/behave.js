@@ -4,7 +4,7 @@ A **truly work-in-progress** JS lib that's as easy to reason-about as a React ap
 
 Useful for website behaviors; less so for complex apps.
 
-[!oh behave](https://media.giphy.com/media/3o7bu1iM5MSwG2y7NS/giphy.gif)
+[!oh behave](https://media.giphy.com/media/3o7bu1iM5MSwG2y7NS/giphy.gif "Oh behave")
 
 ```html
 <div data-behavior="SomeBehavior">
