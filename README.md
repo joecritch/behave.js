@@ -45,7 +45,7 @@ const SomeBehavior = behave('SomeBehavior', {
         color: _ => _.state.isDisabled ? 'red' : null,
       },
     },
-    // The "child" namespace is very single-element children
+    // The "child" namespace is for single-element children
     child: {
       // This is the name of the child, e.g. `data-SomeBehavior-btn`
       btn: {
@@ -54,7 +54,7 @@ const SomeBehavior = behave('SomeBehavior', {
         onClick: _ => _.handleBtnClick,
       }
     },
-    // The "children" namespace is used for multi-element children
+    // The "children" namespace is for multi-element children
     // children: {
     //   item: {
     //     attributes: {
