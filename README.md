@@ -13,6 +13,8 @@ Useful for website behaviors; less so for complex apps.
 </div>
 ```
 
+<img src="https://media.giphy.com/media/3o7bu1iM5MSwG2y7NS/giphy.gif">
+
 ```js
 // Here's an \extremely useful\ demo behavior that disables itself when you click a child Button behavior
 
