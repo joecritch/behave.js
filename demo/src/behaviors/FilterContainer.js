@@ -1,22 +1,58 @@
-const FilterContainer = behave('FilterContainer', {
+import Behavior from '../../../behave';
+import _ from 'lodash';
+import produce from 'immer';
+
+class FilterContainer extends Behavior {
+  render = {
+    children: {
+      authgate: {
+        isOpen: _ => _.state.authgateIsOpen,
+        onRequestClose: _ => _.handleOverlayRequestClose,
+      },
+      resetlink: {
+        attributes: {
+          classList: {
+            'is-disabled': _ => !_.isFiltered()
+          },
+        },
+        listeners: {
+          click: _ => _.reset,
+        },
+      },
+      search: {
+        value: _ => _.state.activeSearch,
+        onChange: _ => _.handleSearchChange,
+      },
+      filtercontrol: {
+        onChange: _ => _.changeById,
+        activeFilters: _ => _.state.activeFilters,
+      },
+      results: {
+        query: _ => _.serializeFilters(),
+      },
+    },
+  }
+  propTypes = {
+    locked: 'boolean',
+  }
   getInitialState() {
     return {
       activeFilters: {},
       activeSearch: '',
       authgateIsOpen: false,
     };
-  },
+  }
   onUpdate() {
     console.log("this.state", this.state);
-  },
-  handleOverlayRequestClose() {
+  }
+  handleOverlayRequestClose = () => {
     this.setState({
       authgateIsOpen: false,
       activeSearch: '',
       activeFilters: {},
     })
-  },
-  handleSearchChange(value) {
+  }
+  handleSearchChange = (value) => {
     if (this.props.locked) {
       return this.setState({
         authgateIsOpen: true,
@@ -28,8 +64,8 @@ const FilterContainer = behave('FilterContainer', {
     this.setState({
       activeSearch: value,
     });
-  },
-  changeById(id, data) {
+  }
+  changeById = (id, data) => {
     if (this.props.locked) {
       return this.setState({
         authgateIsOpen: true,
@@ -45,17 +81,17 @@ const FilterContainer = behave('FilterContainer', {
         draft.activeFilters[id] = data;
       }
     }));
-  },
-  reset(evt) {
+  }
+  reset = (evt) => {
     evt.preventDefault();
     this.setState({
       activeFilters: {},
       activeSearch: '',
     });
-  },
+  }
   isFiltered() {
     return Object.keys(this.state.activeFilters).length || this.state.activeSearch;
-  },
+  }
   serializeFilters() {
     const filters = this.state.activeFilters;
     let serializedFilters = {};
@@ -75,41 +111,7 @@ const FilterContainer = behave('FilterContainer', {
     }
 
     return serializedFilters;
-  },
-  render: {
-    child: {
-      authgate: {
-        isOpen: _ => _.state.authgateIsOpen,
-        onRequestClose: _ => _.handleOverlayRequestClose,
-      },
-      resetlink: {
-        attributes: {
-          classList: {
-            'is-disabled': _ => !_.isFiltered()
-          },
-        },
-        listeners: {
-          click: _ => _.reset,
-        },
-      },
-      search: {
-        value: _ => _.state.activeSearch,
-        onChange: _ => _.handleSearchChange,
-      },
-    },
-    children: {
-      filtercontrol: {
-        onChange: _ => _.changeById,
-        activeFilters: _ => _.state.activeFilters,
-      },
-      results: {
-        query: _ => _.serializeFilters(),
-      },
-    },
-  },
-  propTypes: {
-    locked: 'boolean',
-  },
-});
+  }
+}
 
-window.FilterContainer = FilterContainer;
+export default FilterContainer;

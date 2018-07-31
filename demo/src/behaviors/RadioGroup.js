@@ -1,9 +1,12 @@
-window.RadioGroup = behave('RadioGroup', {
-  handleInputClick(child, evt) {
+import Behavior from '../../../behave';
+
+class RadioGroup extends Behavior {
+  handleInputClick = (child, evt) => {
     evt.preventDefault();
     this.props.onChange(child.value || null);
-  },
-  render: {
+  }
+
+  render = {
     children: {
       input: {
         listeners: {
@@ -19,5 +22,7 @@ window.RadioGroup = behave('RadioGroup', {
         },
       },
     },
-  },
-});
+  }
+}
+
+export default RadioGroup;

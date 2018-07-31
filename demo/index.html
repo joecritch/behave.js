@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Behave.js</title>
+    <title>Behave.js demo</title>
     <style>
     .is-disabled {
       opacity: 0.2;
@@ -25,16 +25,6 @@
     </style>
   </head>
   <body>
-
-    <!--
-    <div data-behavior="JoinForm">
-      <input type="text" data-JoinForm-textinput="TextInput">
-      <input type="text" data-JoinForm-textinput="TextInput" data-TextInput-validateconfig='{"type": "match"}'>
-      <button data-JoinForm-submitbtn="SubmitBtn">
-        Go
-      </button>
-    </div>
-    -->
 
     <div>
 
@@ -67,24 +57,7 @@
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.10/lodash.min.js"></script>
-    <script src="https://unpkg.com/immer/dist/immer.umd.js"></script>
-    <script>
-    window.produce = immer.default;
-    window.debounce = _.debounce;
-    </script>
-    <script src="behave.js"></script>
-    <script src="shallowEqualObjects.js"></script>
-    <!-- <script src="behaviors/JoinForm.js"></script>
-    <script src="behaviors/SubmitBtn.js"></script>
-    <script src="behaviors/TextInput.js"></script> -->
-    <script src="behaviors/FilterContainer.js"></script>
-    <script src="behaviors/FilterControl.js"></script>
-    <script src="behaviors/RadioGroup.js"></script>
-    <script src="behaviors/FilterSearch.js"></script>
-    <script src="behaviors/Overlay.js"></script>
-    <script src="behaviors/LoadMore.js"></script>
-    <script src="main.js"></script>
+    <script src="dist/main.js"></script>
 
   </body>
 </html>

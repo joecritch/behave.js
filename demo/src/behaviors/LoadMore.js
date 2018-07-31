@@ -1,14 +1,18 @@
-window.LoadMore = behave('LoadMore', {
+import Behavior from '../../../behave';
+import shallowEqualObjects from 'shallow-equal/objects';
+import { debounce } from 'lodash';
+
+class LoadMore extends Behavior {
   init() {
     this.fetchResults = debounce(this.fetchResults, 500);
     this.fetchResults();
-  },
+  }
   getInitialState() {
     return {
       currentPage: 1,
       isLastPage: this.props.lastPage || false,
     };
-  },
+  }
   onUpdate(prevProps, prevState) {
     if (!shallowEqualObjects(this.props.query, prevProps.query || {})) {
       this.setState({
@@ -19,17 +23,17 @@ window.LoadMore = behave('LoadMore', {
     if (this.state.currentPage !== prevState.currentPage) {
       this.fetchResults();
     }
-  },
-  handleBtnClick() {
+  }
+  handleBtnClick = () => {
     this.setState({
       currentPage: this.state.currentPage + 1,
     });
-  },
+  }
   fetchResults() {
     const headers = new Headers();
     headers.set('Accept', 'application/json');
 
-    const responsePromise = fetch(`/results_page_${this.state.currentPage}.json`, {
+    const responsePromise = fetch(`/mock_json/results_page_${this.state.currentPage}.json`, {
       method: 'GET',
       headers,
     });
@@ -44,14 +48,14 @@ window.LoadMore = behave('LoadMore', {
       if (this.state.currentPage > 1) {
         const template = document.createElement('template');
         template.innerHTML = json.html;
-        this.getChild('inner').appendChild(template.content);
+        this.getChild('inner').node.appendChild(template.content);
       } else {
-        this.getChild('inner').innerHTML = json.html;
+        this.getChild('inner').node.innerHTML = json.html;
       }
     });
-  },
-  render: {
-    child: {
+  }
+  render = {
+    children: {
       inner: {},
       btn: {
         listeners: {
@@ -64,5 +68,7 @@ window.LoadMore = behave('LoadMore', {
         },
       },
     },
-  },
-});
+  }
+}
+
+export default LoadMore;

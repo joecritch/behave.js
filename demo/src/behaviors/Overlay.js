@@ -1,8 +1,10 @@
-window.Overlay = behave('Overlay', {
-  handleClick() {
+import Behavior from '../../../behave';
+
+class Overlay extends Behavior {
+  handleClick = () => {
     this.props.onRequestClose();
-  },
-  render: {
+  }
+  render = {
     attributes: {
       // classList: {
         // 'is-open': _ => _.props.isOpen,
@@ -14,5 +16,7 @@ window.Overlay = behave('Overlay', {
     listeners: {
       click: _ => _.props.isOpen && _.handleClick,
     },
-  },
-});
+  }
+}
+
+export default Overlay;

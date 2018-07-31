@@ -1,12 +1,14 @@
-window.FilterSearch = behave('FilterSearch', {
-  handleKeyUp(evt) {
+import Behavior from '../../../behave';
+
+class FilterSearch extends Behavior {
+  handleKeyUp = (evt) => {
     this.props.onChange(this.getChild('input').value);
-  },
-  handleClearClick() {
+  }
+  handleClearClick = () => {
     this.props.onChange('');
-  },
-  render: {
-    child: {
+  }
+  render = {
+    children: {
       input: {
         attributes: {
           value: _ => _.props.value,
@@ -26,5 +28,7 @@ window.FilterSearch = behave('FilterSearch', {
         },
       },
     },
-  },
-});
+  }
+}
+
+export default FilterSearch;
