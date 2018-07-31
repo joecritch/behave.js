@@ -31,7 +31,7 @@ Useful for websites that need a bit of JS [behavior](#why-behaviors). Less usefu
 ## How-To
 
 - **[Here's a sandbox I made earlier](http://https://codesandbox.io/s/llk3oqno4l).**
-- **[And here's a more real-world demo](#another-demo)
+- [And here's a more real-world demo](#another-demo)
 - Follow along below to understand what's what. Or, if you're familiar with React etc., perhaps skip to [Send data to a child](#send-data-to-a-child) to compare.
 
 **Knowledge required for this how-to:**
