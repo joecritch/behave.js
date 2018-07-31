@@ -13,15 +13,15 @@ Useful for websites that need a bit of JS [behavior](#why-behaviors). Less usefu
 - [How-To](#how-to)
   - [Initialize a behavior](#initialize-a-behavior)
   - [Render](#render)
-  - [Change state][#change-state]
-  - [Listen to events][#listen-to-events]
+  - [Change state](#change-state)
+  - [Listen to events](#listen-to-events)
   - [Define children](#define-children)
-  - [Connect a child to another behavior][#connect-a-child-to-another-behavior]
-  - [Send data to a child][#send-data-to-a-child]
-- [ES6 classes][#es6-classes]
-  - [Class properties][#class-properties]
-- [Another demo][#another-demo]
-- [FAQ][#faq]
+  - [Connect a child to another behavior](#connect-a-child-to-another-behavior)
+  - [Send data to a child](#send-data-to-a-child)
+- [ES6 classes](#es6-classes)
+  - [Class properties](#class-properties)
+- [Another demo](#another-demo)
+- [FAQ](#faq)
 
 ## How-To
 
