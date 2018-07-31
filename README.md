@@ -10,6 +10,7 @@ Useful for websites that need a bit of JS [behavior](#why-behaviors). Less usefu
 
 ## Contents
 
+- [Installation](#installation)
 - [How-To](#how-to)
   - [Initialize a behavior](#initialize-a-behavior)
   - [Render](#render)
@@ -22,6 +23,10 @@ Useful for websites that need a bit of JS [behavior](#why-behaviors). Less usefu
   - [Class properties](#class-properties)
 - [Another demo](#another-demo)
 - [FAQ](#faq)
+
+## Installation
+
+- `npm install behave.js --save`
 
 ## How-To
 
