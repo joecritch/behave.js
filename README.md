@@ -26,7 +26,7 @@ Useful for websites that need a bit of JS [behavior](#why-behaviors). Less usefu
 
 ## Installation
 
-- `npm install behave.js --save`
+- `npm install @joecritch/behave.js --save`
 
 ## How-To
 

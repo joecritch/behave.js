@@ -1,5 +1,6 @@
 {
-  "name": "behave.js",
+  "name": "@joecritch/behave.js",
+  "description": "Gradually layer a website's UI with JavaScript behavior, and keep it easy to understand and predict",
   "version": "0.1.0",
   "main": "dist/behave.js",
   "repository": "git@github.com:joecritch/behave.js.git",
