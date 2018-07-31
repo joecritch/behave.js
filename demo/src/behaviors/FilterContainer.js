@@ -1,4 +1,4 @@
-import { createBehavior } from 'behave.js';
+import { createBehavior } from '@joecritch/behave.js';
 import _ from 'lodash';
 import produce from 'immer';
 

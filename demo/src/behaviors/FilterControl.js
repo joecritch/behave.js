@@ -1,4 +1,4 @@
-import { Behavior } from 'behave.js';
+import { Behavior } from '@joecritch/behave.js';
 
 class FilterControl extends Behavior {
   propTypes = {

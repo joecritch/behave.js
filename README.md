@@ -56,7 +56,7 @@ Firstly, we need to connect the HTML to JavaScript, in order to initialize the c
 ```js
 // src/Toggle.js
 
-import { createBehavior } from 'behave.js';
+import { createBehavior } from '@joecritch/behave.js';
 
 const Toggle = createBehavior('Toggle', {
   init() {
@@ -72,7 +72,7 @@ _(If you prefer, you can write behaviors as [ES6 classes](#es6-classes).)_
 ```js
 // src/index.js
 
-import { manageBehaviors } from 'behave.js';
+import { manageBehaviors } from '@joecritch/behave.js';
 import Toggle from './Toggle'; // (The behavior you created before)
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -323,7 +323,7 @@ There is also an ES6 class alternative for defining behaviors.
 You access it like so:
 
 ```js
-import { Behavior } from 'behave.js';
+import { Behavior } from '@joecritch/behave.js';
 
 export default class Toggle extends Behavior {
   constructor(...args) {
@@ -354,7 +354,7 @@ export default Toggle;
 Optionally, if you have `babel-preset-stage-2` or similar installed, you can use class properties too, for a terser syntax:
 
 ```js
-import { Behavior } from 'behave.js';
+import { Behavior } from '@joecritch/behave.js';
 
 export default class Toggle extends Behavior {
   state = {
