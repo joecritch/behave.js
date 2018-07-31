@@ -1,6 +1,6 @@
 class Behavior {
   propTypes = {};
-  render = {},
+  render = {};
   __cache = { attributes: {}, listeners: {}, children: {}, child: {} };
   static initialize(node, loadedBehaviors, initialProps) {
     const instance = new this(arguments);

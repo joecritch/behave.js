@@ -1,18 +1,33 @@
-# behave.js!
+# behave.js
 
 <img src="http://www.repostatus.org/badges/latest/wip.svg">
 
 **Gradually layer a website's UI with JavaScript behavior, and keep it easy to understand and predict.**
 
-Useful for websites that need a bit of JS [behavior](#why-behaviors). Less useful for applications where the UI may intricately change over time, where more functional components may be required (see React for that).
+Useful for websites that need a bit of JS [behavior](#why-behaviors). Less useful for applications where the UI changes intricately over time, where more functional components may be required (see React for that).
 
 <img src="https://media.giphy.com/media/3o7bu1iM5MSwG2y7NS/giphy.gif">
+
+## Contents
+
+- [How-To](#how-to)
+  - [Initialize a behavior](#initialize-a-behavior)
+  - [Render](#render)
+  - [Change state][#change-state]
+  - [Listen to events][#listen-to-events]
+  - [Define children](#define-children)
+  - [Connect a child to another behavior][#connect-a-child-to-another-behavior]
+  - [Send data to a child][#send-data-to-a-child]
+- [ES6 classes][#es6-classes]
+  - [Class properties][#class-properties]
+- [Another demo][#another-demo]
+- [FAQ][#faq]
 
 ## How-To
 
 - **[Here's a sandbox I made earlier](http://todo).**
 - Follow along below to understand what's what.
-- or, if you're familiar with React, perhaps skip to [Props](#props) to compare
+- or, if you're familiar with React, perhaps skip to [Send data to a child](#send-data-to-a-child) to compare.
 
 **Knowledge required for this how-to:**
 
@@ -20,20 +35,17 @@ Useful for websites that need a bit of JS [behavior](#why-behaviors). Less usefu
 - ES modules
 - ES6 arrow functions
 
-### Initialize
+### Initialize a behavior
 
 Firstly, we need to connect the HTML to JavaScript, in order to initialize the correct behavior.
 
 ```html
 <!-- index.html -->
 
-<!-- ... the usual DOCTYPE, etc. -->
-
+<!-- + the usual DOCTYPE, etc. -->
 <button data-behavior="Toggle">
   Toggle me
 </button>
-
-<!-- ... any other html -->
 ```
 
 ```js
@@ -50,7 +62,7 @@ const Toggle = createBehavior('Toggle', {
 export default Toggle;
 ```
 
-_(If you prefer, you can write this as an [ES6 class](#es6-classes).)_
+_(If you prefer, you can write behaviors as [ES6 classes](#es6-classes).)_
 
 ```js
 // src/index.js
@@ -81,7 +93,7 @@ const Toggle = createBehavior('Toggle', {
 });
 ```
 
-^ Here, the button's text turns red immediately.
+_^ Here, the button's text turns red immediately._
 
 Each of the object's functions (e.g. `color`) is called whenever the behavior is updating. The values they return will be used with the respective DOM API operation. In this case: `node.style.color = "red";`.
 
@@ -89,7 +101,7 @@ Of course, the example above doesn't do anything that vanilla JS couldn't. (Or b
 
 ### Change state
 
-Behaviors can store their own state, which can be changed by various means. Here, the `isOn` state changes to `true` after 1 second.
+Behaviors can store their own state, which can be changed by various means.
 
 ```js
 const Toggle = createBehavior('Toggle', {
@@ -117,13 +129,13 @@ const Toggle = createBehavior('Toggle', {
 });
 ```
 
-^ Therefore, the button's text turns red after 1 second.
+_^ The `isOn` state changes to `true` after 1 second. Therefore, the button's text turns red after 1 second._
 
 Now, as promised, the `color` function serves a purpose! Rather than always returning "red", it now depends on the **state** of the component. If `isOn` is `true`, it'll be red; else, the color attribute will be removed (when it returns `null`).
 
 (Note: the `_` argument of the function. This is the **behavior's instance that is currently being updated**. Of course, this can be called something else of course, if required. Also, if you want to avoid arrow functions and rely on `this` context instead, you can: `function() { console.log(this) }`, where `this` is the behavior instance.)
 
-### Event listeners
+### Listen to events
 
 Behaviors can also listen to native DOM events, using a similar declarative syntax.
 
@@ -154,11 +166,11 @@ const Toggle = createBehavior('Toggle', {
 });
 ```
 
-^ Here, when the button is clicked, its text turns red.
+_^ Here, when the button is clicked, its text turns red._
 
 This is a convenient way to manage event listeners. Bonus: if the `click` function above returned `null`, it would remove any previous listener. (So, whether a listener is active could also be based on `_.state`.)
 
-### Children
+### Define children
 
 You can describe child nodes for a behavior, using a `data-BehaviorName-childname` syntax:
 
@@ -199,7 +211,7 @@ You can describe child nodes for a behavior, using a `data-BehaviorName-childnam
 
 This also works if you have multiple children of the same name.
 
-### Child behaviors
+### Connect a child to another behavior
 
 A child can also reference another behavior via the markup:
 
@@ -212,7 +224,7 @@ A child can also reference another behavior via the markup:
 </div>
 ```
 
-Here, we no longer reference `Toggle` from `data-behavior`, but instead define it as a child of the new `Panel` behavior.
+We no longer reference `Toggle` from `data-behavior`, but instead define it as a child of the new `Panel` behavior.
 
 Here is the new `Panel` behavior. (No changes would be required to `Toggle` at this point.)
 
@@ -226,7 +238,7 @@ const Panel = createBehavior('Panel', {
 });
 ```
 
-### Props
+### Send data to a child
 
 Behaviors can send data to their child behaviors using `props`.
 
@@ -363,7 +375,7 @@ There is another demo which is slightly more "real world". It's located in the `
 
 1. Clone this repo
 1. `cd` into the project root
-1. `$ yarn && yarn compile` to compile `behave.js`
+1. `$ yarn && yarn build` to compile `behave.js`
 1. `$ cd demo && yarn && yarn demo`
 1. `& open http://localhost:8081`
 
@@ -388,3 +400,9 @@ This also greatly reduces complexity in the internal "diff". However, the values
 ### Why are these FAQs so bad?
 
 _Please contribute via issues or PRs! I'd like to make this as useful as possible._
+
+## TODO
+
+- [ ] Write tests
+- [ ] Add Flow annotations
+- [ ] Test overall performance

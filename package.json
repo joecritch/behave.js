@@ -1,7 +1,7 @@
 {
   "name": "behave.js",
   "version": "0.1.0",
-  "main": "dist/main.js",
+  "main": "dist/behave.js",
   "repository": "git@github.com:joecritch/behave.js.git",
   "author": "Joe Critchley <joecritch@gmail.com>",
   "license": "MIT",

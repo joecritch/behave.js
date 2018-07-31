@@ -6,14 +6,15 @@
   "author": "Joe Critchley <joecritch@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "demo-server": "http-server -p 8081 demo",
-    "demo-webpack": "mkdirp demo/dist && webpack --module-bind js=babel-loader -w --mode=development",
+    "demo-server": "http-server -p 8081 .",
+    "demo-webpack": "mkdirp dist && webpack --module-bind js=babel-loader -w --mode=development",
     "demo": "concurrently \"npm:demo-server\" \"npm:demo-webpack\""
   },
   "dependencies": {
     "immer": "^1.5.0",
     "lodash": "^4.17.10",
-    "shallow-equal": "^1.0.0"
+    "shallow-equal": "^1.0.0",
+    "behave.js": "file:../"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

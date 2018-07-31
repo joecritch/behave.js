@@ -1,4 +1,4 @@
-import Behavior from '../../../behave';
+import { Behavior } from 'behave.js';
 
 class RadioGroup extends Behavior {
   handleInputClick = (child, evt) => {

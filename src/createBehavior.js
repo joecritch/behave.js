@@ -24,19 +24,19 @@ const createBehavior = (name, obj) => {
 
     init(...args) {
       if (init) {
-        init(...args);
+        return init.apply(this, args);
       }
     }
 
     getInitialState(...args) {
       if (getInitialState) {
-        getInitialState(...args);
+        return getInitialState.apply(this, args);
       }
     }
 
     onUpdate(...args) {
       if (onUpdate) {
-        onUpdate(...args);
+        return onUpdate.apply(this, args);
       }
     }
   }

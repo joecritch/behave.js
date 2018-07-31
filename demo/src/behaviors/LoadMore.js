@@ -1,4 +1,4 @@
-import Behavior from '../../../behave';
+import { Behavior } from 'behave.js';
 import shallowEqualObjects from 'shallow-equal/objects';
 import { debounce } from 'lodash';
 

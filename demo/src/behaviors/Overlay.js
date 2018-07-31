@@ -1,4 +1,4 @@
-import Behavior from '../../../behave';
+import { Behavior } from 'behave.js';
 
 class Overlay extends Behavior {
   handleClick = () => {

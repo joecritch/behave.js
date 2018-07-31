@@ -1,9 +1,9 @@
-import Behavior from '../../../behave';
+import { createBehavior } from 'behave.js';
 import _ from 'lodash';
 import produce from 'immer';
 
-class FilterContainer extends Behavior {
-  render = {
+const FilterContainer = createBehavior('FilterContainer', {
+  render: {
     children: {
       authgate: {
         isOpen: _ => _.state.authgateIsOpen,
@@ -31,28 +31,29 @@ class FilterContainer extends Behavior {
         query: _ => _.serializeFilters(),
       },
     },
-  }
-  propTypes = {
+  },
+  propTypes: {
     locked: 'boolean',
-  }
+  },
   getInitialState() {
     return {
       activeFilters: {},
       activeSearch: '',
       authgateIsOpen: false,
     };
-  }
+  },
   onUpdate() {
+    console.log(this);
     console.log("this.state", this.state);
-  }
-  handleOverlayRequestClose = () => {
+  },
+  handleOverlayRequestClose() {
     this.setState({
       authgateIsOpen: false,
       activeSearch: '',
       activeFilters: {},
     })
-  }
-  handleSearchChange = (value) => {
+  },
+  handleSearchChange(value) {
     if (this.props.locked) {
       return this.setState({
         authgateIsOpen: true,
@@ -64,8 +65,8 @@ class FilterContainer extends Behavior {
     this.setState({
       activeSearch: value,
     });
-  }
-  changeById = (id, data) => {
+  },
+  changeById(id, data) {
     if (this.props.locked) {
       return this.setState({
         authgateIsOpen: true,
@@ -81,17 +82,17 @@ class FilterContainer extends Behavior {
         draft.activeFilters[id] = data;
       }
     }));
-  }
-  reset = (evt) => {
+  },
+  reset(evt) {
     evt.preventDefault();
     this.setState({
       activeFilters: {},
       activeSearch: '',
     });
-  }
+  },
   isFiltered() {
     return Object.keys(this.state.activeFilters).length || this.state.activeSearch;
-  }
+  },
   serializeFilters() {
     const filters = this.state.activeFilters;
     let serializedFilters = {};
@@ -111,7 +112,7 @@ class FilterContainer extends Behavior {
     }
 
     return serializedFilters;
-  }
-}
+  },
+});
 
 export default FilterContainer;
