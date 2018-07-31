@@ -30,9 +30,9 @@ Useful for websites that need a bit of JS [behavior](#why-behaviors). Less usefu
 
 ## How-To
 
-- **[Here's a sandbox I made earlier](http://todo).**
-- Follow along below to understand what's what.
-- or, if you're familiar with React, perhaps skip to [Send data to a child](#send-data-to-a-child) to compare.
+- **[Here's a sandbox I made earlier](http://https://codesandbox.io/s/llk3oqno4l).**
+- **[And here's a more real-world demo](#another-demo)
+- Follow along below to understand what's what. Or, if you're familiar with React etc., perhaps skip to [Send data to a child](#send-data-to-a-child) to compare.
 
 **Knowledge required for this how-to:**
 
@@ -221,7 +221,7 @@ This also works if you have multiple children of the same name.
 A child can also reference another behavior via the markup:
 
 ```html
-<div data-behavior="Panel">
+<div data-behavior="Panel" class="panel">
   <button data-Panel-btn="Toggle">
     <span data-Toggle-ontext>on</span>
     <span data-Toggle-offtext class="hide">off</span>
@@ -231,7 +231,9 @@ A child can also reference another behavior via the markup:
 
 We no longer reference `Toggle` from `data-behavior`, but instead define it as a child of the new `Panel` behavior.
 
-Here is the new `Panel` behavior. (No changes would be required to `Toggle` at this point.)
+Here is the new `Panel` behavior. No changes would be required to `Toggle` at this point.
+
+(`Panel` will also need adding to `src.index.js` alongside `Toggle`)
 
 ```js
 const Panel = createBehavior('Panel', {
@@ -266,6 +268,11 @@ const Panel = createBehavior('Panel', {
   },
 
   render: {
+    attributes: {
+      classList: {
+        'is-on': _ => _.state.isOn,
+      },
+    },
     children: {
       btn: {
         isOn: _ => _.state.isOn,
@@ -300,14 +307,14 @@ const Toggle = createBehavior('Toggle', {
       'ontext': {
         attributes: {
           style: {
-            display: _ => _.state.isOn ? 'none' : null,
+            display: _ => _.props.isOn ? 'none' : null,
           },
         },
       },
       'offtext': {
         attributes: {
           style: {
-            display: _ => _.state.isOn ? null : 'none',
+            display: _ => _.props.isOn ? 'inline' : null,
           },
         },
       },
