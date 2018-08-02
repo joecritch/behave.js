@@ -8,13 +8,15 @@
   "scripts": {
     "demo-server": "http-server -p 8081 .",
     "demo-webpack": "mkdirp dist && webpack --module-bind js=babel-loader -w --mode=development",
-    "demo": "concurrently \"npm:demo-server\" \"npm:demo-webpack\""
+    "demo": "concurrently \"npm:demo-server\" \"npm:demo-webpack\"",
+    "start": "serve . --single",
+    "build": "mkdirp && webpack --module-bind js=babel-loader --mode=development"
   },
   "dependencies": {
+    "@joecritch/behave.js": "0.1.0",
     "immer": "^1.5.0",
     "lodash": "^4.17.10",
-    "shallow-equal": "^1.0.0",
-    "@joecritch/behave.js": "file:../"
+    "shallow-equal": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -22,6 +24,7 @@
     "babel-preset-stage-2": "^6.24.1",
     "concurrently": "^3.6.1",
     "mkdirp": "^0.5.1",
+    "serve": "^9.4.0",
     "webpack": "^4.16.3",
     "webpack-cli": "^3.1.0"
   }
