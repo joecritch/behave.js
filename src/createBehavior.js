@@ -13,6 +13,8 @@ const createBehavior = (name, obj) => {
   class ExtendedBehavior extends Behavior {
     render = render;
 
+    state = getInitialState ? getInitialState.apply(this) : {};
+
     constructor(...args) {
       super(...args);
       const customKeys = Object.keys(custom);
@@ -25,12 +27,6 @@ const createBehavior = (name, obj) => {
     init(...args) {
       if (init) {
         return init.apply(this, args);
-      }
-    }
-
-    getInitialState(...args) {
-      if (getInitialState) {
-        return getInitialState.apply(this, args);
       }
     }
 

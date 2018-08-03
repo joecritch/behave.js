@@ -8,11 +8,8 @@ class Behavior {
     instance.attrProps = instance.__getAttrProps();
     instance.props = Object.assign({}, instance.attrProps, initialProps);
     instance.loadedBehaviors = loadedBehaviors;
-    instance.state =
-      typeof instance.getInitialState === 'function'
-        ? instance.getInitialState.call(instance)
-        : (instance.state || {});
-    instance.__update();
+    instance.state = instance.state || {};
+    instance.__update(undefined, undefined, true);
     if (instance.init) {
       instance.init();
     }
@@ -73,7 +70,7 @@ class Behavior {
     }, 0);
   }
 
-  resolveProps(props, args = []) {
+  __resolveProps(props, args = []) {
     // Resolve the prop functions
     const resolvedProps = {};
     Object.keys(props).forEach(propName => {
@@ -83,16 +80,16 @@ class Behavior {
   }
 
   // Called by parent behaviors
-  setProps(props, args = []) {
+  __setProps(props, args = []) {
     // Merge the DOM attribute props with explicit props
     const prevProps = this.props;
     this.props = Object.assign({}, this.attrProps, props);
     this.__update(prevProps, this.state);
   }
 
-  __update(prevProps = {}, prevState = {}) {
+  __update(prevProps = {}, prevState = {}, silentUpdate = false) {
 
-    console.group('__update', this.node);
+    // console.group('__update', this.node);
 
     const updateClassList = (node, classList, cache) => {
       Object.keys(classList).forEach(key => {
@@ -104,7 +101,7 @@ class Behavior {
             node.classList.remove(key);
           }
           cache[key] = shouldHaveClass;
-          console.log('updated class', cache[key]);
+          // console.log('updated class', cache[key]);
         }
       });
     };
@@ -118,7 +115,7 @@ class Behavior {
         if (val !== cache[key]) {
           node.style[key] = val;
           cache[key] = val;
-          console.log('updated style property', cache[key]);
+          // console.log('updated style property', cache[key]);
         }
       });
     };
@@ -143,7 +140,7 @@ class Behavior {
           node[key] = attr;
           cache[key] = attr;
 
-          console.log("updated misc. attribute", cache[key]);
+          // console.log("updated misc. attribute", cache[key]);
         }
       });
     };
@@ -159,7 +156,7 @@ class Behavior {
             node.addEventListener(key, listener);
           }
           cache[key] = listener;
-          console.log("updated listener", cache[key]);
+          // console.log("updated listener", cache[key]);
         }
       });
     };
@@ -173,11 +170,11 @@ class Behavior {
     updateAttributes(this.node, attributes, this.__cache.attributes);
     updateListeners(this.node, listeners, this.__cache.listeners);
 
-    console.log("children", children);
+    // console.log("children", children);
 
     Object.keys(children).forEach(childrenName => {
 
-      console.group(childrenName);
+      // console.group(childrenName);
 
       const attrKey = `data-${this.constructor.name.toLowerCase()}-${childrenName}`;
       let childList;
@@ -211,7 +208,7 @@ class Behavior {
             instance = this.loadedBehaviors[behaviorName].initialize(
               child,
               this.loadedBehaviors,
-              this.resolveProps(childProps, [child])
+              this.__resolveProps(childProps, [child])
             );
           }
           this.__cache.children[childrenName][i] = {
@@ -220,8 +217,8 @@ class Behavior {
           };
         } else {
           if (this.__cache.children[childrenName][i].behavior) {
-            this.__cache.children[childrenName][i].behavior.setProps(
-              this.resolveProps(childProps, [child])
+            this.__cache.children[childrenName][i].behavior.__setProps(
+              this.__resolveProps(childProps, [child])
             );
           }
         }
@@ -249,14 +246,14 @@ class Behavior {
         }
       }
 
-      console.groupEnd();
+      // console.groupEnd();
     });
 
-    if (this.onUpdate) {
+    if (this.onUpdate && !silentUpdate) {
       this.onUpdate.call(this, prevProps, prevState);
     }
 
-    console.groupEnd();
+    // console.groupEnd();
   }
 }
 
