@@ -416,5 +416,7 @@ _Please contribute via issues or PRs! I'd like to make this as useful as possibl
 ## TODO
 
 - [ ] Write tests
+- [ ] Add support for multiple behaviors per node
+- [ ] Add debug mode to enable logs
 - [ ] Add Flow annotations
 - [ ] Test overall performance

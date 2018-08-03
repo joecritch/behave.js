@@ -70,7 +70,7 @@ class Behavior {
     }, 0);
   }
 
-  __resolveProps(props, args = []) {
+  __resolveProps(props, args) {
     // Resolve the prop functions
     const resolvedProps = {};
     Object.keys(props).forEach(propName => {
@@ -190,21 +190,17 @@ class Behavior {
 
       for (let i = 0; i < nodeList.length; i++) {
         const child = nodeList[i];
-        const resolvedProps =
-          typeof children[childrenName] === 'function'
-            ? children[childrenName](child)
-            : children[childrenName];
         const {
           attributes: childAttributes,
           listeners: childListeners,
           ...childProps
-        } = resolvedProps;
+        } = children[childrenName];
 
         if (!this.__cache.children[childrenName][i]) {
           const behaviorName = child.getAttribute(attrKey);
           let instance;
           if (behaviorName) {
-            // Currently supports only one linked behavior per child
+            // TODO - Currently supports only one linked behavior per child
             instance = this.loadedBehaviors[behaviorName].initialize(
               child,
               this.loadedBehaviors,
