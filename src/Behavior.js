@@ -8,7 +8,7 @@ class Behavior {
     instance.attrProps = instance.__getAttrProps();
     instance.props = Object.assign({}, instance.attrProps, initialProps);
     instance.loadedBehaviors = loadedBehaviors;
-    instance.state = instance.state || {};
+    instance.state = (instance.getInitialState && instance.getInitialState()) || instance.state || {};
     instance.__update(undefined, undefined, true);
     if (instance.init) {
       instance.init();
