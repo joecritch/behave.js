@@ -113,7 +113,12 @@ class Behavior {
         // Uses `''` for null style values to properly remove
         val = val == null ? '' : val;
         if (val !== cache[key]) {
-          node.style[key] = val;
+          if (key.startsWith('--')) {
+            // it's a css variable
+            node.style.setProperty(key, val);
+          } else {
+            node.style[key] = val;
+          }
           cache[key] = val;
           // console.log('updated style property', cache[key]);
         }
