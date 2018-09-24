@@ -91,9 +91,9 @@ class Behavior {
 
     // console.group('__update', this.node);
 
-    const updateClassList = (node, classList, cache) => {
+    const updateClassList = (node, classList, cache, args = []) => {
       Object.keys(classList).forEach(key => {
-        const shouldHaveClass = classList[key].call(null, this);
+        const shouldHaveClass = classList[key].call(null, this, ...args);
         if (shouldHaveClass !== cache[key]) {
           if (shouldHaveClass) {
             node.classList.add(key);
@@ -106,9 +106,9 @@ class Behavior {
       });
     };
 
-    const updateStyle = (node, styleObj, cache) => {
+    const updateStyle = (node, styleObj, cache, args = []) => {
       Object.keys(styleObj).forEach(key => {
-        let val = styleObj[key].call(null, this);
+        let val = styleObj[key].call(null, this, ...args);
 
         // Uses `''` for null style values to properly remove
         val = val == null ? '' : val;
@@ -125,12 +125,12 @@ class Behavior {
 
       if (classList) {
         cache.classList = cache.classList || {};
-        updateClassList(node, classList, cache.classList);
+        updateClassList(node, classList, cache.classList, args);
       }
 
       if (style) {
         cache.style = cache.style || {};
-        updateStyle(node, style, cache.style);
+        updateStyle(node, style, cache.style, args);
       }
 
       Object.keys(rest).forEach(key => {
